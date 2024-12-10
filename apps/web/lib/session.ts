@@ -59,27 +59,28 @@ export async function deleteSession() {
   cookieStore.delete("session");
 }
 
-// export async function updateTokens({
-//   accessToken,
-//   refreshToken,
-// }: {
-//   accessToken: string;
-//   refreshToken: string;
-// }) {
-//   const cookie = cookies().get("session")?.value;
-//   if (!cookie) return null;
+export async function updateTokens({
+  accessToken,
+  refreshToken,
+}: {
+  accessToken: string;
+  refreshToken: string;
+}) {
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get("session")?.value;
+  if (!cookie) return null;
 
-//   const { payload } = await jwtVerify<Session>(cookie, encodedKey);
+  const { payload } = await jwtVerify<Session>(cookie, encodedKey);
 
-//   if (!payload) throw new Error("Session not found");
+  if (!payload) throw new Error("Session not found");
 
-//   const newPayload: Session = {
-//     user: {
-//       ...payload.user,
-//     },
-//     accessToken,
-//     refreshToken,
-//   };
+  const newPayload: Session = {
+    user: {
+      ...payload.user,
+    },
+    accessToken,
+    refreshToken,
+  };
 
-//   await createSession(newPayload);
-// }
+  await createSession(newPayload);
+}
